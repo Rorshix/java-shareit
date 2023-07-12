@@ -2,48 +2,43 @@ package ru.practicum.shareit.user.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.rep.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.rep.UserRepository;
-import ru.practicum.shareit.user.service.UpdatedUserFields;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.storage.UserStorage;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
+    UserStorage userStorage;
 
     @Override
     public User addUser(User user) {
-        return userRepository.addUser(user);
+        return userStorage.add(user);
     }
 
     @Override
-    public User getUser(long id) {
-        return userRepository.getUser(id);
+    public User updateUser(User user, long userId) {
+
+        userStorage.get(userId);
+        user.setId(userId);
+        return userStorage.update(user, userId);
     }
 
     @Override
-    public Collection<User> getUsers() {
-        return userRepository.getUsers();
+    public void deleteUser(long userId) {
+        userStorage.delete(userStorage.get(userId));
     }
 
     @Override
-    public User updateUser(User user, Map<UpdatedUserFields, Boolean> targetFields) {
-        return userRepository.updateUser(user, targetFields);
+    public User getUserById(long userId) {
+        return userStorage.get(userId);
     }
 
-    /**
-     * При удалении пользователя также вызывается метод удаления всех вещей, которыми он владеет.
-     */
     @Override
-    public void deleteUser(long id) {
-        userRepository.deleteUser(id);
-        itemRepository.deleteUserItems(id);
+    public List<User> getAllUsers() {
+        return userStorage.getAll();
     }
 }

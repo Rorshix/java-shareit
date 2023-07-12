@@ -1,55 +1,53 @@
 package ru.practicum.shareit.item.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.rep.ItemRepository;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.item.service.UpdatedItemFields;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
-import ru.practicum.shareit.user.rep.UserRepository;
+import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.user.service.UserService;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Objects;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
-    private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+    private final ItemStorage itemStorage;
+    private final UserService userService;
 
     @Override
-    public Item addItem(Item item) {
-        long ownerId = item.getOwnerId();
+    public Collection<ItemDto> getItems(Long userId) {
+        return ItemMapper.toDto(itemStorage.getAll(userId));
+    }
 
-        try {
-            userRepository.getUser(ownerId);
-        } catch (UserNotFoundException e) {
-            throw new UserNotFoundException(
-                    String.format("Ошибка добавления вещи: владельца с id=%d не существует.", ownerId));
+    @Override
+    public ItemDto getById(Long itemId) {
+        return ItemMapper.toDto(itemStorage.findById(itemId));
+    }
+
+    @Override
+    public ItemDto create(Long userId, ItemDto itemDto) {
+        var item = ItemMapper.fromDto(itemDto);
+        item.setOwnerId(userService.getUserById(userId).getId());
+        return ItemMapper.toDto(itemStorage.create(item));
+    }
+
+    @Override
+    public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
+        if (!Objects.equals(itemStorage.findById(itemId).getOwnerId(), userId)) {
+            throw new NotFoundException("You not the owner of that item.");
         }
-
-        return itemRepository.addItem(item);
+        var updatedItem = ItemMapper.fromDto(itemDto);
+        updatedItem.setId(itemId);
+        return ItemMapper.toDto(itemStorage.update(updatedItem));
     }
 
     @Override
-    public Item getItem(long id) {
-        return itemRepository.getItem(id);
-    }
-
-    @Override
-    public Collection<Item> getOwnerItems(long ownerId) {
-        return itemRepository.getOwnerItems(ownerId);
-    }
-
-    @Override
-    public Item updateItem(Item item, Map<UpdatedItemFields, Boolean> targetFields) {
-        return itemRepository.updateItem(item, targetFields);
-    }
-
-    @Override
-    public Collection<Item> searchAvailableItems(String query) {
-        return itemRepository.searchAvailableItems(query);
+    public Collection<ItemDto> search(String text) {
+        return text.isEmpty() ? new ArrayList<>() : ItemMapper.toDto(itemStorage.search(text));
     }
 }
