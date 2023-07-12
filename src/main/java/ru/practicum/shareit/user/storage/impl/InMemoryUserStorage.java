@@ -10,7 +10,7 @@ import ru.practicum.shareit.user.storage.UserStorage;
 import java.util.*;
 
 @Repository
-public class InMemoryUserStorage implements UserStorage {
+public class  InMemoryUserStorage implements UserStorage {
     private static long newId = 1;
 
     private final HashMap<Long, User> userMap = new HashMap<>();
