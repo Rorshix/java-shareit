@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongAccessException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -32,14 +34,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto create(Long userId, ItemDto itemDto) {
         var item = ItemMapper.fromDto(itemDto);
-        item.setOwnerId(userService.getById(userId).getId());
+        item.setOwnerId(userService.getUserById(userId).getId());
         return ItemMapper.toDto(itemStorage.create(item));
     }
 
     @Override
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
         if (!Objects.equals(itemStorage.findById(itemId).getOwnerId(), userId)) {
-            throw new WrongAccessException("You not the owner of that item.");
+            throw new NotFoundException("You not the owner of that item.");
         }
         var updatedItem = ItemMapper.fromDto(itemDto);
         updatedItem.setId(itemId);

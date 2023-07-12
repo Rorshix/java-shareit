@@ -1,49 +1,44 @@
 package ru.practicum.shareit.user.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.storage.UserStorage;
 
-import java.util.Collection;
-
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+
+    UserStorage userStorage;
 
     @Override
-    public Collection<UserDto> getAll() {
-        return UserMapper.toDto(userStorage.findAll());
+    public User addUser(User user) {
+        return userStorage.add(user);
     }
 
     @Override
-    public UserDto getById(Long userId) {
-        return UserMapper.toDto(userStorage.findById(userId));
+    public User updateUser(User user, long userId) {
+
+        userStorage.get(userId);
+        user.setId(userId);
+        return userStorage.update(user, userId);
     }
 
     @Override
-    public UserDto create(UserDto user) {
-        if (userStorage.findByEmail(user.getEmail()) != null) {
-            throw new ValidationException("This email is already exists.");
-        }
-        return UserMapper.toDto(userStorage.create(UserMapper.fromDto(user)));
+    public void deleteUser(long userId) {
+        userStorage.delete(userStorage.get(userId));
     }
 
     @Override
-    public UserDto update(Long userId, UserDto user) {
-        if (userStorage.findByEmail(user.getEmail()) != null) {
-            throw new ValidationException("This email is already exists.");
-        }
-        return UserMapper.toDto(userStorage.update(userId, UserMapper.fromDto(user)));
+    public User getUserById(long userId) {
+        return userStorage.get(userId);
     }
 
     @Override
-    public void delete(Long userId) {
-        userStorage.remove(userId);
+    public List<User> getAllUsers() {
+        return userStorage.getAll();
     }
 }

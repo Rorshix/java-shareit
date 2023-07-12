@@ -1,48 +1,72 @@
 package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.create.OnCreate;
-import ru.practicum.shareit.create.OnUpdate;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
-import java.util.Collection;
+import javax.validation.Valid;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * TODO Sprint add-controllers.
  */
+
+@Slf4j
+@Validated
 @RestController
-@RequestMapping(path = "/users")
 @RequiredArgsConstructor
+@RequestMapping(path = "/users")
 public class UserController {
-    private final UserService userService;
 
-    @GetMapping
-    public Collection<UserDto> getAllUsers() {
-        return userService.getAll();
-    }
-
-    @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable("userId") Long userId) {
-        return userService.getById(userId);
-    }
+    private final UserServiceImpl userService;
+    private final UserMapper mapper;
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto user) {
-        return userService.create(user);
+    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
+
+        User user = mapper.returnUser(userDto);
+        userService.addUser(user);
+        log.info("Add User {} ", user.getId());
+        return mapper.returnUserDto(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable("userId") Long userId,
-                              @RequestBody @Validated(OnUpdate.class) UserDto user) {
-        return userService.update(userId, user);
+    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
+
+        User user = mapper.returnUser(userDto);
+        User newUser = userService.updateUser(user, userId);
+        log.info("Update User {} ", newUser.getId());
+        return mapper.returnUserDto(newUser);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId) {
-        userService.delete(userId);
+    public void deleteUser(@PathVariable Long userId) {
+
+        log.info("User {} deleted ", userId);
+        userService.deleteUser(userId);
     }
 
+    @GetMapping("/{userId}")
+    public UserDto getUser(@PathVariable Long userId) {
+
+        log.info("Get User {} ", userId);
+        return mapper.returnUserDto(userService.getUserById(userId));
+    }
+
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+
+        log.info("List all Users");
+        return userService.getAllUsers()
+                .stream()
+                .map(mapper::returnUserDto)
+                .collect(toList());
+    }
 }

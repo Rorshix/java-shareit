@@ -3,56 +3,80 @@ package ru.practicum.shareit.user.storage.impl;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.exception.WrongAccessException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 @Repository
 public class InMemoryUserStorage implements UserStorage {
-    private final Map<Long, User> users = new ConcurrentHashMap<>();
-    private long nextId = 1L;
+    private static long newId = 1;
+
+    private final HashMap<Long, User> userMap = new HashMap<>();
 
     @Override
-    public Collection<User> findAll() {
-        return users.values();
-    }
+    public User get(long userId) {
 
-    @Override
-    public User findById(Long userId) {
-        var user = users.get(userId);
-        if (user == null) {
-            throw new NotFoundException(String.format("User with %d id not found.", userId));
+        if (userMap.containsKey(userId)) {
+            return userMap.get(userId);
+        } else {
+            throw new NotFoundException( "User id " + userId + " not found.");
         }
-        return users.get(userId);
     }
 
     @Override
-    public User findByEmail(String email) {
-        for (var user : users.values()) {
-            if (user.getEmail().equals(email)) {
-                return user;
+    public List<User> getAll() {
+        return new ArrayList<>(userMap.values());
+    }
+
+    @Override
+    public User add(User user) {
+
+        for (User userCheckEmail : getAll()) {
+            if (userCheckEmail.getEmail().equals(user.getEmail())) {
+                throw new WrongAccessException("there is already a user with an email " + user.getEmail());
             }
         }
-        return null;
-    }
 
-    @Override
-    public User create(User user) {
-        user.setId(nextId++);
-        users.put(user.getId(), user);
+        if (user.getId() == 0) {
+            user.setId(newId++);
+        }
+
+        userMap.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User update(Long userId, User user) {
-        return findById(userId).update(user);
+    public User update(User user, long userId) {
+
+        User newUser = userMap.get(userId);
+
+        if (user.getName() != null) {
+            newUser.setName(user.getName());
+        }
+        if (user.getEmail() != null) {
+            for (User userCheckEmail : getAll()) {
+                if (userCheckEmail.getEmail().equals(user.getEmail()) && userCheckEmail.getId() != userId) {
+                    throw new WrongAccessException("there is already a user with an email " + user.getEmail());
+                }
+            }
+
+            newUser.setEmail(user.getEmail());
+        }
+
+        userMap.put(userId, newUser);
+        return userMap.get(user.getId());
     }
 
     @Override
-    public void remove(Long userId) {
-        users.remove(userId);
+    public void delete(User user) {
+
+        if (!userMap.containsValue(user)) {
+            throw new NotFoundException( "User id " + user.getId() + " not found.");
+        }
+
+        userMap.remove(user.getId());
     }
 }

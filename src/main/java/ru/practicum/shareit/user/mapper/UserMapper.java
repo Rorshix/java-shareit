@@ -1,31 +1,27 @@
 package ru.practicum.shareit.user.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+@Component
 public class UserMapper {
-    public static User fromDto(UserDto userDto) {
-        return User.builder()
-                .id(userDto.getId())
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
-    }
 
-    public static UserDto toDto(User user) {
-        return UserDto.builder()
+    public UserDto returnUserDto(User user) {
+        UserDto userDto = UserDto.builder()
                 .id(user.getId())
-                .name(user.getName())
                 .email(user.getEmail())
+                .name(user.getName())
                 .build();
+        return userDto;
     }
 
-    public static Collection<UserDto> toDto(Collection<User> users) {
-        return users.stream()
-                .map(UserMapper::toDto)
-                .collect(Collectors.toList());
+    public User returnUser(UserDto userDto) {
+        User user = User.builder()
+                .id(userDto.getId())
+                .email(userDto.getEmail())
+                .name(userDto.getName())
+                .build();
+        return user;
     }
 }
