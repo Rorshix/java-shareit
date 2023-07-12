@@ -21,7 +21,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (userMap.containsKey(userId)) {
             return userMap.get(userId);
         } else {
-            throw new NotFoundException( "User id " + userId + " not found.");
+            throw new NotFoundException("User id " + userId + " not found.");
         }
     }
 
@@ -73,7 +73,7 @@ public class InMemoryUserStorage implements UserStorage {
     public void delete(User user) {
 
         if (!userMap.containsValue(user)) {
-            throw new NotFoundException( "User id " + user.getId() + " not found.");
+            throw new NotFoundException("User id " + user.getId() + " not found.");
         }
 
         userMap.remove(user.getId());
