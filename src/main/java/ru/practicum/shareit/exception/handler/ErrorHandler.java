@@ -10,6 +10,7 @@ import ru.practicum.shareit.exception.ErrorResponse;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongAccessException;
+
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
@@ -41,7 +42,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse serverError(final Throwable e) {
-       String error= String.format("server error: %s", e.getMessage());
+       String error = String.format("server error: %s", e.getMessage());
        log.info(error);
        return new ErrorResponse(error);
     }
