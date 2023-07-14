@@ -71,11 +71,6 @@ public class  InMemoryUserStorage implements UserStorage {
 
     @Override
     public void delete(User user) {
-
-        if (!userMap.containsValue(user)) {
-            throw new NotFoundException("User id " + user.getId() + " not found.");
-        }
-
         userMap.remove(user.getId());
     }
 }
