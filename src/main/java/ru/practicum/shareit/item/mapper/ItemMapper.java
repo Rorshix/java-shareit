@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE )
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
     public static Item fromDto(ItemDto itemDto) {
         return Item.builder()
