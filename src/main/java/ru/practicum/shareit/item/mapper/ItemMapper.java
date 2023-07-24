@@ -1,35 +1,42 @@
 package ru.practicum.shareit.item.mapper;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import ru.practicum.shareit.user.model.User;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemMapper {
-    public static Item fromDto(ItemDto itemDto) {
-        return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .build();
-    }
 
-    public static ItemDto toDto(Item item) {
-        return ItemDto.builder()
+    public static ItemDto returnItemDto(Item item) {
+        ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .build();
+
+        return itemDto;
     }
 
-    public static Collection<ItemDto> toDto(Collection<Item> items) {
-        return items.stream()
-                .map(ItemMapper::toDto)
-                .collect(Collectors.toList());
+    public static Item returnItem(ItemDto itemDto, User user) {
+        Item item = Item.builder()
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .owner(user)
+                .build();
+        return item;
+    }
+
+    public static List<ItemDto> returnItemDtoList(Iterable<Item> items) {
+        List<ItemDto> result = new ArrayList<>();
+
+        for (Item item : items) {
+            result.add(returnItemDto(item));
+        }
+        return result;
     }
 }
