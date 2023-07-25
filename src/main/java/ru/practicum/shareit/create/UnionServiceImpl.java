@@ -2,8 +2,8 @@ package ru.practicum.shareit.create;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.storage.BookingStorage;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
@@ -14,7 +14,7 @@ import ru.practicum.shareit.user.storage.UserStorage;
 @RequiredArgsConstructor
 public class UnionServiceImpl implements UnionService {
 
-    private final BookingRepository bookingRepository;
+    private final BookingStorage bookingStorage;
     private final UserStorage userRepository;
     private final ItemStorage itemRepository;
 
@@ -37,7 +37,7 @@ public class UnionServiceImpl implements UnionService {
     @Override
     public void checkBooking(Long bookingId) {
 
-        if (!bookingRepository.existsById(bookingId)) {
+        if (!bookingStorage.existsById(bookingId)) {
             throw new NotFoundException(Booking.class, "Booking id " + bookingId + " not found.");
         }
     }
