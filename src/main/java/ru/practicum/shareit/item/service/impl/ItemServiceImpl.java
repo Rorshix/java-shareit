@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -52,6 +53,7 @@ public class ItemServiceImpl implements ItemService  {
     }
 
     @Transactional
+    @ReadOnlyProperty
     @Override
     public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) {
 
