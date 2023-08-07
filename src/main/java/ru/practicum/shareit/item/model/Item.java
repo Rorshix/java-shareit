@@ -1,27 +1,38 @@
 package ru.practicum.shareit.item.model;
 
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.*;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.Optional;
+import javax.persistence.*;
+
 
 @Data
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "items", schema = "public")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Item {
-    Long id;
-    String name;
-    String description;
-    Boolean available;
-    Long ownerId;
 
-    public Item update(Item item) {
-        Optional.ofNullable(item.getName()).ifPresent((name) -> this.name = name);
-        Optional.ofNullable(item.getDescription()).ifPresent((description) -> this.description = description);
-        Optional.ofNullable(item.getAvailable()).ifPresent((available) -> this.available = available);
-        return this;
-    }
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "is_available")
+    private Boolean available;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+
 }

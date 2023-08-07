@@ -6,10 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.ErrorResponse;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.exception.WrongAccessException;
+import ru.practicum.shareit.exception.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -55,6 +52,14 @@ public class ErrorHandler {
         int index = error.lastIndexOf(string);
         String strMessage = index == 0 ? "" : error.substring(index + string.length());
         error = String.format("Method argument not valid: %s", strMessage.isBlank() ? error : strMessage);
+        log.info(error);
+        return new ErrorResponse(error);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
+        String error = String.format("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
         log.info(error);
         return new ErrorResponse(error);
     }
