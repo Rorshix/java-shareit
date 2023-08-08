@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserStorage userRepository;
+    private final UserStorage userStorage;
     private final UnionService unionService;
 
     @Transactional
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public UserDto addUser(UserDto userDto) {
 
         User user = UserMapper.returnUser(userDto);
-        userRepository.save(user);
+        userStorage.save(user);
 
         return UserMapper.returnUserDto(user);
     }
@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
         user.setId(userId);
 
         unionService.checkUser(userId);
-        User newUser = userRepository.findById(userId).get();
+        User newUser = userStorage.findById(userId).get();
 
         if (user.getName() != null) {
             newUser.setName(user.getName());
         }
 
         if (user.getEmail() != null) {
-            List<User> findEmail = userRepository.findByEmail(user.getEmail());
+            List<User> findEmail = userStorage.findByEmail(user.getEmail());
 
             if (!findEmail.isEmpty() && findEmail.get(0).getId() != userId) {
                 throw new WrongAccessException("there is already a user with an email " + user.getEmail());
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
             newUser.setEmail(user.getEmail());
         }
 
-        userRepository.save(newUser);
+        userStorage.save(newUser);
 
         return UserMapper.returnUserDto(newUser);
     }
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(long userId) {
 
         unionService.checkUser(userId);
-        userRepository.deleteById(userId);
+        userStorage.deleteById(userId);
     }
 
     @Transactional(readOnly = true)
@@ -72,13 +72,13 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(long userId) {
 
         unionService.checkUser(userId);
-        return UserMapper.returnUserDto(userRepository.findById(userId).get());
+        return UserMapper.returnUserDto(userStorage.findById(userId).get());
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAllUsers() {
 
-        return UserMapper.returnUserDtoList(userRepository.findAll());
+        return UserMapper.returnUserDtoList(userStorage.findAll());
     }
 }

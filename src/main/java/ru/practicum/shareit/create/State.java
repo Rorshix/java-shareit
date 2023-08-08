@@ -17,13 +17,12 @@ public enum State {
     REJECTED;
 
     public static State getEnumValue(String state) {
-        if ((state == null) || state.isBlank()) {
-            return State.ALL;
-        }
+
         try {
-            return State.valueOf(state.toUpperCase().trim());
+            return State.valueOf(state);
         } catch (Exception e) {
-            throw new UnsupportedStatusException(String.format("Unknown state: %s", state));
+            throw new UnsupportedStatusException("Unknown state: " + state);
         }
+
     }
 }
