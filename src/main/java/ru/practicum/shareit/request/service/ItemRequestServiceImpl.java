@@ -13,7 +13,7 @@ import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.service.ItemRequestService;
+import ru.practicum.shareit.request.storage.ItemRequestStorage;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
@@ -27,7 +27,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
-    private final ItemRequestRepository itemRequestRepository;
+    private final ItemRequestStorage itemRequestStorage;
     private final UnionService unionService;
 
     @Transactional
@@ -40,7 +40,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         ItemRequest itemRequest = ItemRequestMapper.returnItemRequest(itemRequestDto, user);
 
-        itemRequest = itemRequestRepository.save(itemRequest);
+        itemRequest = itemRequestStorage.save(itemRequest);
 
         return ItemRequestMapper.returnItemRequestDto(itemRequest);
     }
@@ -50,7 +50,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         unionService.checkUser(userId);
 
-        List<ItemRequest> itemRequests = itemRequestRepository.findByRequesterIdOrderByCreatedAsc(userId);
+        List<ItemRequest> itemRequests = itemRequestStorage.findByRequesterIdOrderByCreatedAsc(userId);
 
         List<ItemRequestDto> result = new ArrayList<>();
         for (ItemRequest itemRequest : itemRequests) {
@@ -64,7 +64,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         PageRequest pageRequest = unionService.checkPageSize(from, size);
 
-        Page<ItemRequest> itemRequests = itemRequestRepository.findByIdIsNotOrderByCreatedAsc(userId, pageRequest);
+        Page<ItemRequest> itemRequests = itemRequestStorage.findByIdIsNotOrderByCreatedAsc(userId, pageRequest);
 
         List<ItemRequestDto> result = new ArrayList<>();
         for (ItemRequest itemRequest : itemRequests) {
@@ -79,7 +79,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         unionService.checkUser(userId);
         unionService.checkRequest(requestId);
 
-        ItemRequest itemRequest = itemRequestRepository.findById(requestId).get();
+        ItemRequest itemRequest = itemRequestStorage.findById(requestId).get();
 
         return addItemsToRequest(itemRequest);
     }

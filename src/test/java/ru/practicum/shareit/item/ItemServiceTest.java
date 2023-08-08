@@ -23,7 +23,7 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.storage.CommentStorage;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.ItemRequestStorage;
+import ru.practicum.shareit.request.storage.ItemRequestStorage;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 

@@ -10,7 +10,7 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.storage.ItemRequestStorage;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
@@ -21,7 +21,7 @@ public class UnionServiceImpl implements UnionService {
     private final BookingStorage bookingStorage;
     private final UserStorage userStorage;
     private final ItemStorage itemStorage;
-    private final ItemRequestRepository itemRequestRepository;
+    private final ItemRequestStorage itemRequestStorage;
 
     @Override
     public void checkUser(Long userId) {
@@ -50,7 +50,7 @@ public class UnionServiceImpl implements UnionService {
     @Override
     public void checkRequest(Long requestId) {
 
-        if (!itemRequestRepository.existsById(requestId)) {
+        if (!itemRequestStorage.existsById(requestId)) {
             throw new NotFoundException(ItemRequest.class, "Request id " + requestId + " not found.");
         }
     }
