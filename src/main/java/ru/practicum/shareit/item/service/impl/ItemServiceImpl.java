@@ -8,7 +8,7 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingStorage;
 import ru.practicum.shareit.create.Status;
-import ru.practicum.shareit.create.UnionServiceImpl;
+import ru.practicum.shareit.create.UnionService;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingStorage bookingStorage;
     private final CommentStorage commentStorage;
     private final ItemRequestStorage itemRequestStorage;
-    private final UnionServiceImpl unionService;
+    private final UnionService unionService;
 
     @Transactional
     @Override
