@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.create.Status;
+import ru.practicum.shareit.booking.Status;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;

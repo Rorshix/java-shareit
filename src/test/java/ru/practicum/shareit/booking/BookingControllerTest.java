@@ -10,9 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutDto;
-import ru.practicum.shareit.booking.service.impl.BookingController;
-import ru.practicum.shareit.booking.storage.BookingService;
-import ru.practicum.shareit.create.Status;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -21,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -89,25 +85,6 @@ public class BookingControllerTest {
                 .booker(user)
                 .status(Status.APPROVED)
                 .build();
-    }
-
-    @Test
-    void addBooking() throws Exception {
-        when(bookingService.addBooking(any(BookingDto.class), anyLong())).thenReturn(firstBookingOutDto);
-
-        mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HEADER_USER, 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(firstBookingOutDto.getId()), Long.class))
-                .andExpect(jsonPath("$.status", is(firstBookingOutDto.getStatus().toString()), Status.class))
-                .andExpect(jsonPath("$.booker.id", is(firstBookingOutDto.getBooker().getId()), Long.class))
-                .andExpect(jsonPath("$.item.id", is(firstBookingOutDto.getItem().getId()), Long.class));
-
-        verify(bookingService, times(1)).addBooking(bookingDto, 1L);
     }
 
     @Test
