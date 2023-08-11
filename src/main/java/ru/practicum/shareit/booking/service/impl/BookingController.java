@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutDto;
 import ru.practicum.shareit.booking.storage.BookingService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.create.Constant.HEADER_USER;
