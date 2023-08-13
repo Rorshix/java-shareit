@@ -30,7 +30,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailExistException(final WrongAccessException e) {
+    public ErrorResponse handleEmailExistException(final EmailExistException e) {
         String error = String.format("conflict exception: %s", e.getMessage());
         log.info(error);
         return new ErrorResponse(error);

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.create.UnionService;
-import ru.practicum.shareit.exception.WrongAccessException;
+import ru.practicum.shareit.exception.EmailExistException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             List<User> findEmail = userStorage.findByEmail(user.getEmail());
 
             if (!findEmail.isEmpty() && findEmail.get(0).getId() != userId) {
-                throw new WrongAccessException("there is already a user with an email " + user.getEmail());
+                throw new EmailExistException("there is already a user with an email " + user.getEmail());
             }
             newUser.setEmail(user.getEmail());
         }

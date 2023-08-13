@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.exception.WrongAccessException;
+import ru.practicum.shareit.exception.EmailExistException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -93,7 +93,7 @@ class UserServiceTest {
         when(userStorage.findByEmail(anyString())).thenReturn(List.of(firstUser));
 
         firstUserDto.setEmail("");
-        assertThrows(WrongAccessException.class, () -> userService.updateUser(firstUserDto, 2L));
+        assertThrows(EmailExistException.class, () -> userService.updateUser(firstUserDto, 2L));
     }
 
     @Test
