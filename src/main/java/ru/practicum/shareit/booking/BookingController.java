@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.create.Constant.HEADER_USER;
@@ -24,7 +25,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingOutDto> addBooking(@RequestHeader(HEADER_USER) Long userId,
-                                                    @RequestBody BookingDto bookingDto) {
+                                                    @RequestBody @Valid BookingDto bookingDto) {
 
         log.info("User {}, add new booking", userId);
         return ResponseEntity.ok(bookingService.addBooking(bookingDto, userId));
