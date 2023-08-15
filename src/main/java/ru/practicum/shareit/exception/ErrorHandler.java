@@ -39,18 +39,6 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        String error = e.getMessage();
-        String string = "default message";
-        int index = error.lastIndexOf(string);
-        String strMessage = index == 0 ? "" : error.substring(index + string.length());
-        error = String.format("Method argument not valid: %s", strMessage.isBlank() ? error : strMessage);
-        log.info(error);
-        return new ErrorResponse(error);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
         return new ErrorResponse(e.getMessage());
     }
