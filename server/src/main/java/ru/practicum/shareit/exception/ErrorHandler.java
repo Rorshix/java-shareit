@@ -14,38 +14,42 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
-        return new ErrorResponse(e.getMessage());
+        log.debug("Получен статус 400 {}", e.getMessage(), e);
+        return new ErrorResponse("Validation exception");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
-        return new ErrorResponse(e.getMessage());
+        log.debug("Получен статус 404 {}", e.getMessage(), e);
+        return new ErrorResponse("Not found exception");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleEmailExistException(final EmailExistException e) {
-        return new ErrorResponse(e.getMessage());
+        log.debug("Получен статус 409 {}", e.getMessage(), e);
+        return new ErrorResponse("Email exception");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse serverError(final Throwable e) {
-       String error = String.format("server error: %s", e.getMessage());
-       log.info(error);
-       return new ErrorResponse(error);
+        log.debug("Получен статус 500 {}", e.getMessage(), e);
+        return new ErrorResponse("Unsupported status exception");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        return new ErrorResponse(e.getMessage());
+        log.debug("Получен статус 400 {}", e.getMessage(), e);
+        return new ErrorResponse("Validation exception");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
-        return new ErrorResponse(e.getMessage());
+        log.debug("Получен статус 400 {}", e.getMessage(), e);
+        return new ErrorResponse("Unsupported status exception");
     }
 }
