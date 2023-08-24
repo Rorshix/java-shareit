@@ -33,7 +33,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public  ErrorResponse handleThrowableExceptions(final Exception e){
+    public  ErrorResponse handleThrowableExceptions(final Exception e) {
         log.debug("Получен статус 500 {}", e.getMessage(), e);
         return new ErrorResponse("Error server");
     }
