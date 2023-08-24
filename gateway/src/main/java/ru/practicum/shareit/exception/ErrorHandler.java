@@ -14,7 +14,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
         log.debug("Получен статус 500 {}", e.getMessage(), e);
-        return new ErrorResponse("Unsupported status exception");
+        return new ErrorResponse("UNSUPPORTED_STATUS");
     }
 
     @ExceptionHandler
