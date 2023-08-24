@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandler {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
-        log.debug("Получен статус 500 {}", e.getMessage(), e);
+        log.debug("Получен статус 400 {}", e.getMessage(), e);
         return new ErrorResponse("UNSUPPORTED_STATUS");
     }
 
@@ -29,5 +29,12 @@ public class ErrorHandler {
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
         log.debug("Получен статус 404 {}", e.getMessage(), e);
         return new ErrorResponse("Not found exception");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public  ErrorResponse handleThrowableExceptions(final Exception e){
+        log.debug("Получен статус 500 {}", e.getMessage(), e);
+        return new ErrorResponse("Error server");
     }
 }

@@ -50,6 +50,6 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
         log.debug("Получен статус 400 {}", e.getMessage(), e);
-        return new ErrorResponse("Unsupported status exception");
+        return new ErrorResponse("UNSUPPORTED_STATUS");
     }
 }
